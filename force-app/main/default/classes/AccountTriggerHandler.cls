@@ -4,7 +4,6 @@ public with sharing class AccountTriggerHandler {
         String newAccountsJSON = JSON.serialize(
             Callout.wrapAccounts(newAccounts)
         );
-        System.debug(newAccountsJSON);
         Callout.makeCreateAccountCallout(newAccountsJSON);
     }
 }

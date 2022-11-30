@@ -1,7 +1,7 @@
 public with sharing class Callout {
 
     private static final String CUSTOM_METADATA_RECORD_NAME = 'TargetOrg';
-    private static final String TARGET_ORG_URL = 'https://uacom3-dev-ed.my.salesforce.com/services/apexrest/Account';
+    private static final String TARGET_ORG_URL = 'https://uacom3-dev-ed.my.salesforce.com/services/apexrest/Account/';
 	private static final String JSON_CONTENT_TYPE = 'application/json';
 	private static final String POST_METHOD = 'POST';
 
@@ -13,7 +13,6 @@ public with sharing class Callout {
 	}
 
 	private static AuthenticationCredentials__mdt getAuthData(String customMetadataRecordName){
-        System.debug(AuthenticationCredentials__mdt.getInstance(customMetadataRecordName));
 		return AuthenticationCredentials__mdt.getInstance(customMetadataRecordName);
 	}
 
@@ -25,7 +24,6 @@ public with sharing class Callout {
 		authURL += '&username=' + authData.Username__c;
 		authURL += '&password=' + authData.Password__c;
 		authURL += '&security_token=' + authData.SecurityToken__c;
-        System.debug(authURL);
 		return authURL;
 	}
 
@@ -37,7 +35,6 @@ public with sharing class Callout {
 		Http http = new Http();
 		HttpResponse response = http.send(authReq);
 		SF_Authentication authBody = new SF_Authentication().parse(response.getBody());
-        System.debug(authBody);
 		return authBody;
 	}
 
@@ -48,16 +45,13 @@ public with sharing class Callout {
 		dataReq.setHeader('Authorization', authBody.token_type + ' ' + authBody.access_token);
 		dataReq.setHeader('Content-Type', JSON_CONTENT_TYPE);
 		dataReq.setBody(newAccountsJSON);
-        System.debug(dataReq);
 		Http http = new Http();
 		HttpResponse response = http.send(dataReq);
-        System.debug(response);
 	}
 
 	public static AccountWrapper wrapAccounts(List<Account> accounts){
 		AccountWrapper wrapper = new AccountWrapper();
 		wrapper.accounts = accounts;
-        System.debug(wrapper);
 		return wrapper;
 	}
 }

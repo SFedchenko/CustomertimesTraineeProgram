@@ -71,9 +71,10 @@ public with sharing class AccountsTableController {
     public static AccountsTableData getAccountsTableData(String fieldSetName) {
         List<Schema.FieldSetMember> accountsTableFieldSetFields = new Utils()
             .getFieldSetFields(ACCOUNT_OBJECT_NAME, fieldSetName);
+        AccountsTableController accountsTableController = new AccountsTableController();
         return new AccountsTableData(
-            new AccountsTableController().getColumns(accountsTableFieldSetFields),
-            new AccountsTableController().getAccounts(accountsTableFieldSetFields)
+            accountsTableController.getColumns(accountsTableFieldSetFields),
+            accountsTableController.getAccounts(accountsTableFieldSetFields)
         );
     }
 }

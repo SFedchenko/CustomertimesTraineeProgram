@@ -1,8 +1,8 @@
 public with sharing class AccountsTableController {
 
     private static final String ACCOUNT_OBJECT_NAME = 'Account';
-    private static final String ACCOUNT_SOURCE_FIELD_NAME = 'AccountSource';
-    private static final Schema.DescribeFieldResult ACCOUNT_SOURCE_FIELD = new Utils().getField(ACCOUNT_OBJECT_NAME, ACCOUNT_SOURCE_FIELD_NAME);
+    private static final String ORIGINAL_SOURCE_FIELD_NAME = 'OriginalSource__c';
+    private static final Schema.DescribeFieldResult ORIGINAL_SOURCE_FIELD = new Utils().getField(ACCOUNT_OBJECT_NAME, ORIGINAL_SOURCE_FIELD_NAME);
     private static final String STRING_SELECT = 'SELECT ';
     private static final String STRING_FROM = ' FROM ';
 
@@ -45,9 +45,9 @@ public with sharing class AccountsTableController {
         }
         columns.add(
             new Column(
-                ACCOUNT_SOURCE_FIELD.getLabel(),
-                ACCOUNT_SOURCE_FIELD_NAME,
-                String.valueOf( ACCOUNT_SOURCE_FIELD.getType() ).toLowerCase()
+                ORIGINAL_SOURCE_FIELD.getLabel(),
+                ORIGINAL_SOURCE_FIELD_NAME,
+                String.valueOf( ORIGINAL_SOURCE_FIELD.getType() ).toLowerCase()
             )
         );
         return columns;
@@ -58,7 +58,7 @@ public with sharing class AccountsTableController {
         for (Schema.FieldSetMember field : accountsTableFieldSetFields) {
             query += field.getFieldPath() + ', ';
         }
-        query += ACCOUNT_SOURCE_FIELD_NAME + STRING_FROM + ACCOUNT_OBJECT_NAME;
+        query += ORIGINAL_SOURCE_FIELD_NAME + STRING_FROM + ACCOUNT_OBJECT_NAME;
         List<Account> accounts = Database.query(query);
         List<Account> securedAccounts = Security.stripInaccessible(
             AccessType.READABLE,

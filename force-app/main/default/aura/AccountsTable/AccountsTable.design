@@ -1,0 +1,3 @@
+<design:component label="Accounts Table">
+    <design:attribute name="fieldSetName" label="Field Set Name" required="true" description="API name of the fieldset, which fields are shown in the table" />
+</design:component>

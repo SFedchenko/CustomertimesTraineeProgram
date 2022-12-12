@@ -1,0 +1,66 @@
+<template>
+    <div class="slds-is-relative">
+        <lightning-card>
+            
+            <template if:true={showTable}>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th class="slds-text-align_center" style="width: 25%" scope="col">
+                                <div class="slds-truncate">{labels.BatchClassName}</div>
+                            </th>
+                            <th class="slds-text-align_center" style="width: 25%" scope="col">
+                                <div class="slds-truncate">{labels.Status}</div>
+                            </th>
+                            <th class="slds-text-align_center" style="width: 25%" scope="col">
+                                <div class="slds-truncate">{labels.CompletedDate}</div>
+                            </th>
+                            <th class="slds-text-align_center" style="width: 25%" scope="col">
+                                <div class="slds-truncate">{labels.Action}</div>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <template for:each={batchJobsTableData} for:item="batchJob">
+                            <tr key={batchJob.Id} class="slds-hint-parent">
+                                <td class="slds-text-align_center">
+                                    <div class="slds-truncate">
+                                        <a data-batch-job-id={batchJob.Id} onclick={openModal} title={labels.MoreDetails}>{batchJob.batchClassName}</a>
+                                    </div>
+                                </td>
+                                <td class="slds-text-align_center">
+                                    <div class="slds-truncate">{batchJob.status}</div>
+                                </td>
+                                <td class="slds-text-align_center">
+                                    <div class="slds-truncate">{batchJob.completedDate}</div>
+                                </td>
+                                <td class="slds-text-align_center">
+                                    <template if:true={batchJob.isRerunButton}>
+                                        <lightning-button
+                                            variant="brand"
+                                            label={labels.RerunButton}
+                                            data-batch-job-class-name={batchJob.batchClassName}
+                                            onclick={rerunBatch}
+                                        >
+                                        </lightning-button>
+                                    </template>
+                                    <template if:true={batchJob.isAbortButton}>
+                                        <lightning-button
+                                            variant="brand"
+                                            label={labels.AbortButton}
+                                            data-batch-job-id={batchJob.Id}
+                                            onclick={abortBatch}
+                                        >
+                                        </lightning-button>
+                                    </template>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+
+        </lightning-card>
+    </div>
+</template>

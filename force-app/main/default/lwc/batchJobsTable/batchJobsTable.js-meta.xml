@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>55.0</apiVersion>
+    <isExposed>true</isExposed>
+
+    <targets>
+        <target>lightning__AppPage</target>
+    </targets>
+
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage">
+            <property
+                name="fieldSetName"
+                label="API name of the field set, which fields are shown in batch job logs table"
+                type="String"
+                required="true"
+            />
+        </targetConfig>
+    </targetConfigs>
+
+</LightningComponentBundle>

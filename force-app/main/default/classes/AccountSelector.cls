@@ -1,6 +1,6 @@
 public with sharing class AccountSelector {
     
-    public List<Account> getAccountsByTerritoryIds(Set<Id> territoryIds) {
+    public List<Account> selectByTerritoryIds(Set<Id> territoryIds) {
         return [
             SELECT
                 Id,

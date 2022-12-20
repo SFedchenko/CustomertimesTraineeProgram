@@ -8,7 +8,7 @@ public with sharing class TerrUserTriggerHandler {
             terrUserService.getTerritoryIdsByUserIds(terrUserRecords)
         );
         Set<Id> territoryIds = new MapUtils().getAllValueIds(territoryIdsByUserIds);
-        List<Account> accounts = new AccountSelector().getAccountsByTerritoryIds(territoryIds);
+        List<Account> accounts = new AccountSelector().selectByTerritoryIds(territoryIds);
         if (accounts.size() > 0) {
             Map<Id,Set<Id>> accountIdsByUserIds = new AccountService().getAccountIdsByUserIds(
                 territoryIdsByUserIds,
@@ -20,7 +20,7 @@ public with sharing class TerrUserTriggerHandler {
             } catch (Exception ex) {
                 System.debug( ex.getMessage() );
             }
-            Map<Id,Set<Id>> contactIdsByUserIds = new AccountService().getContactIdsByUserIds(
+            Map<Id,Set<Id>> contactIdsByUserIds = new ContactService().getContactIdsByUserIds(
                 territoryIdsByUserIds,
                 accounts
             );
@@ -39,7 +39,7 @@ public with sharing class TerrUserTriggerHandler {
             terrUserService.getTerritoryIdsByUserIds(terrUserRecords)
         );
         Set<Id> territoryIds = new MapUtils().getAllValueIds(territoryIdsByUserIds);
-        List<Account> accounts = new AccountSelector().getAccountsByTerritoryIds(territoryIds);
+        List<Account> accounts = new AccountSelector().selectByTerritoryIds(territoryIds);
         if (accounts.size() > 0) {
             Map<Id,Set<Id>> accountIdsByUserIds = new AccountService().getAccountIdsByUserIds(
                 territoryIdsByUserIds,
@@ -55,7 +55,7 @@ public with sharing class TerrUserTriggerHandler {
             } catch (Exception ex) {
                 System.debug( ex.getMessage() );
             }
-            Map<Id,Set<Id>> contactIdsByUserIds = new AccountService().getContactIdsByUserIds(
+            Map<Id,Set<Id>> contactIdsByUserIds = new ContactService().getContactIdsByUserIds(
                 territoryIdsByUserIds,
                 accounts
             );

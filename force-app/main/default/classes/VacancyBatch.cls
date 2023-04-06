@@ -30,4 +30,4 @@ public with sharing class VacancyBatch implements Database.Batchable<SObject> {
     public void finish(Database.BatchableContext context) {}
   
     public class CustomException extends Exception {}
-}  
+}

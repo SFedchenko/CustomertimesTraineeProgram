@@ -1,5 +1,7 @@
 public with sharing class Logger {
 
+    private static final String LOG_LEVEL_ERROR = 'ERROR';
+    private static final String LOG_LEVEL_INFO = 'INFO';
     public System.LoggingLevel defineLogLevel(String logLevel) {
         System.LoggingLevel loggingLevel;
         if (logLevel == 'ERROR') {
@@ -14,29 +16,7 @@ public with sharing class Logger {
         AsyncApexJob job = [
             SELECT
                 Id,
-                MethodName,
-                CreatedById 
-            FROM 
-                AsyncApexJob
-            WHERE 
-                Id = :context.getJobId()
-        ];
-
-        Log__c log = new Log__c();
-        log.LoggingLevel__c = logLevel;
-        log.Message__c = message;
-        log.ContextName__c = job.MethodName;
-        insert log;
-
-        System.LoggingLevel loggingLevel = new Logger().defineLogLevel(logLevel);
-        System.debug(loggingLevel, message);
-    }
-
-    public void log(Database.BatchableContext context, Exception ex, String logLevel) {
-        AsyncApexJob job = [
-            SELECT
-                Id,
-                MethodName,
+                CronTriggerId,
                 CreatedById 
             FROM 
                 AsyncApexJob
@@ -47,11 +27,48 @@ public with sharing class Logger {
         List<CronTrigger> cronTriggers = [
             SELECT 
                 Id,
+                CronJobDetail.Name,
                 OwnerId 
             FROM
                 CronTrigger
             WHERE
-                CronJobDetailId = :context.getJobId()
+                Id = :job.CronTriggerId
+        ];
+
+        Log__c log = new Log__c();
+        log.LoggingLevel__c = logLevel;
+        log.Message__c = message;
+        if (cronTriggers.size() > 0) {
+            log.ContextName__c = (String)cronTriggers[0].getSObject ('CronJobDetail').get('Name');
+        }
+        insert log;
+
+        System.LoggingLevel loggingLevel = new Logger().defineLogLevel(logLevel);
+        System.debug(loggingLevel, message);
+    }
+
+    public void log(Database.BatchableContext context, Exception ex, String logLevel) {
+        AsyncApexJob job = [
+            SELECT
+                Id,
+                ApexClass.Name,
+                CronTriggerId,
+                CreatedById 
+            FROM 
+                AsyncApexJob
+            WHERE 
+                Id = :context.getJobId()
+        ];
+
+        List<CronTrigger> cronTriggers = [
+            SELECT 
+                Id,
+                CronJobDetail.Name,
+                OwnerId 
+            FROM
+                CronTrigger
+            WHERE
+                Id = :job.CronTriggerId
         ];
 
         User user = new User();
@@ -76,15 +93,12 @@ public with sharing class Logger {
         }
 
         ExceptionLog__e pe = new ExceptionLog__e();
-        pe.LoggingLevel__c = logLevel;
+        pe.LoggingLevel__c = LOG_LEVEL_ERROR;
         pe.Message__c = ex.getMessage();
         pe.ContextId__c = context.getJobId();
-        pe.ContextName__c = job.MethodName;
+        pe.ContextName__c = (String)job.getSObject ('ApexClass').get('Name');
         pe.StackTraceString__c = ex.getStackTraceString();
         pe.UserName__c = user.Name;
         eventBus.publish(pe);
-
-        System.LoggingLevel loggingLevel = new Logger().defineLogLevel(logLevel);
-        System.debug(loggingLevel, ex.getMessage());
     }
 }
